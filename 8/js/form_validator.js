@@ -64,7 +64,7 @@ function validateCapacityTextError(value) {
 }
 
 function validateType(value) {
-  const price = document.querySelector('#price');
+  const priceBlock = document.querySelector('#price');
   const priceForType = {
     'bungalow': 0,
     'flat': 1000,
@@ -73,8 +73,21 @@ function validateType(value) {
     'palace': 10000
   };
 
-  price.setAttribute('placeholder', priceForType[value]);
-  price.setAttribute('min', priceForType[value]);
+  priceBlock.setAttribute('placeholder', priceForType[value]);
+  priceBlock.setAttribute('min', priceForType[value]);
+}
+
+function validatePrice(value) {
+  validateType(document.querySelector('#type').value);
+  const priceBlock= document.querySelector('#price');
+  const priceMin = priceBlock.getAttribute('min');
+  return Number(value) >= Number(priceMin);
+}
+
+function validatePriceTextError() {
+  const minValue = document.querySelector('#price').getAttribute('min');
+
+  return `Минимальная цена за ночь ${minValue}`;
 }
 
 function validateTime(value) {
@@ -91,7 +104,7 @@ const roomNumber = form.querySelector('#room_number');
 const type = form.querySelector('#type');
 const timein = form.querySelector('#timein');
 const timeout = form.querySelector('#timeout');
-
+const price = form.querySelector('#price');
 
 const pristine = new Pristine(form, {
   classTo: 'ad-form__element',
@@ -116,6 +129,13 @@ pristine.addValidator(
   type,
   validateType
 );
+
+pristine.addValidator(
+  price,
+  validatePrice,
+  validatePriceTextError
+);
+
 
 pristine.addValidator(
   timeout,
